@@ -53,6 +53,7 @@ Build a unified data foundation using Delta Lake and Spark to handle both struct
 Develop, train, and manage ML models efficiently using Azure Databricks’ collaborative environment.
 
 * Get Started with Machine Learning
+* Retrieval Augmented Generation (RAG)
 * Use MLflow in Azure Databricks
 * Train a Model with AutoML
 * Optimize Hyperparameters for ML
