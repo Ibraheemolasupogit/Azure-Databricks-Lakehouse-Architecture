@@ -96,7 +96,7 @@ Delivered real-time insights and event-driven architectures for data-intensive a
 ## 📚 Reference
 
 
-> [Implement a data lakehouse analytics solution with Azure Databricks](https://learn.microsoft.com/en-us/training/)
+> [Implement a data lakehouse analytics solution with Azure Databricks](https://learn.microsoft.com/en-us/training/) <br>
 > [Implement a machine learning solution with Azure Databricks](https://learn.microsoft.com/en-us/training/)
 > [Implement a data engineering solution with Azure Databricks](https://learn.microsoft.com/en-us/training/)
 > [Implement Generative AI engineering with Azure Databricks](https://learn.microsoft.com/en-us/training/)
