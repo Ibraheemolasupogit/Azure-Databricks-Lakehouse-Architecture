@@ -93,9 +93,10 @@ Delivered real-time insights and event-driven architectures for data-intensive a
 
 ---
 
-## 📚 Reference : [View all Workflows](https://microsoftlearning.github.io/mslearn-databricks/)
+## 📚 Reference
 
 
+> [All Workflows](https://microsoftlearning.github.io/mslearn-databricks/) <br>
 > [Implement a data lakehouse analytics solution with Azure Databricks](https://learn.microsoft.com/en-us/training/paths/data-engineer-azure-databricks/) <br>
 > [Implement a machine learning solution with Azure Databricks](https://learn.microsoft.com/en-us/training/paths/build-operate-machine-learning-solutions-azure-databricks/) <br>
 > [Implement a data engineering solution with Azure Databricks](https://learn.microsoft.com/en-us/training/paths/azure-databricks-data-engineer/) <br>
