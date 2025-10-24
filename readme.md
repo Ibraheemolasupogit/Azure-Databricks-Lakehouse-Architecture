@@ -5,6 +5,9 @@
 This repository contains a curated collection of **Azure Databricks workflows** aligned with Microsoft Learn modules.
 Hands-on skills for **data engineering, analytics, machine learning, and Generative AI development** within the **Azure ecosystem**.
 
+📂 **Explore the Project:**  
+- View implementation notebooks and scripts in the **[Projects](./Projects)** folder  
+- See lab results and setup visuals in the **[Lab Screenshots](./lab_screenshot)** folder 
 ---
 
 ## 🧩 Overview
