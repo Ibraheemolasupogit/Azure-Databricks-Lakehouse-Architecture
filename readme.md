@@ -7,7 +7,7 @@ Hands-on skills for **data engineering, analytics, machine learning, and Generat
 
 📂 **Explore the Project:**  
 - View implementation notebooks and scripts in the **[Projects](./Projects)** folder  
-- See lab results and setup visuals in the **[Lab Screenshots](./lab_screenshot)** folder 
+- See lab results and setup visuals in the **[Lab Screenshots](./screenshots)** folder 
 ---
 
 ## 🧩 Overview
