@@ -1,42 +1,90 @@
 # Databricks notebook source
 # COMMAND ----------
 # MAGIC %md
-# MAGIC # Streaming Ingestion with Delta Live Tables
+# MAGIC # End-to-End Streaming with Delta Live Tables (IoT)
 # MAGIC
-# MAGIC **Purpose**
+# MAGIC This notebook demonstrates:
+# MAGIC - Ingesting simulated IoT CSV data as a **Spark Structured Streaming** source
+# MAGIC - Writing to a **Delta** sink
+# MAGIC - Using **Delta Live Tables** to build a simple medallion-style streaming pipeline
 # MAGIC
-# MAGIC This notebook demonstrates a streaming pipeline using:
-# MAGIC
-# MAGIC - **Auto Loader** for incremental ingestion of new files
-# MAGIC - **Delta Live Tables (DLT)** for streaming transformations
-# MAGIC - Materialised views for curated analytical tables
-# MAGIC
-# MAGIC **Key focus areas**
-# MAGIC
-# MAGIC - Structured Streaming with Auto Loader  
-# MAGIC - Declarative transformations with DLT  
-# MAGIC - Managing streaming vs materialised views
+# MAGIC Inspired by the Microsoft Learn lab *"End-to-End Streaming Pipeline with Delta Live Tables"*.
 
 # COMMAND ----------
-# Example Auto Loader stream (adapt to your lab code)
+from pyspark.sql.types import StructType, StructField, StringType, TimestampType, DoubleType
 
-from pyspark.sql.functions import *
+input_path = "/device_stream/"
+delta_sink_path = "/tmp/delta/iot_data"
+checkpoint_path = "/tmp/checkpoints/iot_data"
 
-source_path = "/mnt/landing/iot"
-bronze_table = "live.raw_iot_data"
+schema = StructType([
+    StructField("device_id", StringType(), True),
+    StructField("timestamp", TimestampType(), True),
+    StructField("temperature", DoubleType(), True),
+    StructField("humidity", DoubleType(), True),
+])
 
-raw_stream_df = (
+print(f"Input path: {input_path}")
+print(f"Delta sink: {delta_sink_path}")
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## 1. Create a streaming source and write to Delta
+
+# COMMAND ----------
+from pyspark.sql.functions import col
+
+iotstream = (
     spark.readStream
-         .format("cloudFiles")
-         .option("cloudFiles.format", "json")
-         .load(source_path)
+         .schema(schema)
+         .option("header", "true")
+         .csv(input_path)
 )
 
-(
-    raw_stream_df
-        .withColumn("ingestion_ts", current_timestamp())
-        .writeStream
-        .option("checkpointLocation", "/mnt/checkpoints/raw_iot_data")
-        .option("mergeSchema", "true")
-        .table(bronze_table)
+query = (
+    iotstream.writeStream
+             .format("delta")
+             .option("checkpointLocation", checkpoint_path)
+             .start(delta_sink_path)
 )
+
+print("Streaming from CSV → Delta started. Use query.stop() to stop the stream.")
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## 2. Delta Live Tables definitions
+# MAGIC These functions are used by a Delta Live Tables pipeline
+# MAGIC (configure a DLT pipeline to use this notebook as the source).
+
+# COMMAND ----------
+import dlt
+from pyspark.sql.functions import current_timestamp
+
+@dlt.table(
+    name="raw_iot_data",
+    comment="Raw IoT device data from Delta sink"
+)
+def raw_iot_data():
+    return spark.readStream.format("delta").load(delta_sink_path)
+
+@dlt.table(
+    name="transformed_iot_data",
+    comment="Transformed IoT metrics with derived fields"
+)
+def transformed_iot_data():
+    return (
+        dlt.read("raw_iot_data")
+           .withColumn("temperature_fahrenheit", col("temperature") * 9/5 + 32)
+           .withColumn("humidity_percentage", col("humidity") * 100)
+           .withColumn("event_time", current_timestamp())
+    )
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## 3. Ad-hoc query of transformed stream (for exploration)
+
+# COMMAND ----------
+# MAGIC %sql
+# MAGIC SELECT *
+# MAGIC FROM transformed_iot_data
+# MAGIC LIMIT 50;

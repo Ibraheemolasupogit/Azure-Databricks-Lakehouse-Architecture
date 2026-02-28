@@ -18,67 +18,60 @@ The repository is structured to reflect architectural domains.
 
 ---
 
-## Architecture Overview
+## Architecture at a Glance
 
-The platform follows a layered Lakehouse architecture:
+This project implements a governed Azure Databricks Lakehouse that supports batch, streaming, ML, and Generative AI workloads.
 
-### 1. Ingestion Layer
-- Auto Loader streaming ingestion
-- Schema evolution handling
-- Delta write operations
+- **Storage & Format** – ADLS Gen2 with Delta Lake in a Medallion (Bronze / Silver / Gold) layout  
+- **Processing** – Azure Databricks (Spark clusters and SQL Warehouses)  
+- **Governance** – Unity Catalog for catalogs, schemas, tables, permissions, and lineage  
+- **Orchestration** – Databricks Jobs / Workflows for scheduled and dependency-based pipelines  
+- **ML & LLM** – MLflow, AutoML, and Azure OpenAI integration  
+- **Consumption** – SQL Warehouses serving curated Gold datasets for BI and analytics  
+- **DevOps** – GitHub integration with CI/CD validation via GitHub Actions  
 
-📂 Evidence:
-- evidence/lakehouse/autoloader-new-columns.png
+👉 For the full architecture write-up and design rationale, see  
+`docs/architecture.md`.
+
 
 ---
 
-### 2. Transformation & Lakehouse Modelling
-- Delta Live Tables (DLT)
-- Medallion architecture (Bronze → Silver → Gold)
+## Key Architectural Design Decisions
 
-📂 Evidence:
-- evidence/lakehouse/delta-live-table-pipeline.png
+### Medallion Architecture (Bronze / Silver / Gold)
+A layered Lakehouse model was implemented to separate raw ingestion from curated analytical datasets, ensuring data quality, traceability, and downstream performance optimisation.
 
----
+### Delta Live Tables (DLT) for Declarative Pipelines
+DLT was selected to simplify transformation logic, enforce data expectations, and enable managed orchestration of streaming and batch workloads.
 
-### 3. Governance & Security
-- Unity Catalog schema management
-- Fine-grained table permissions
-- Managed Identity integration
+### Unity Catalog for Governance
+Unity Catalog was implemented to:
+- Centralise metadata
+- Enable fine-grained access controls
+- Support lineage visibility
+- Separate storage from compute
 
-📂 Evidence:
-- evidence/governance/unity-catalog-lineage.png
-- evidence/governance/grant-permissions.png
-- evidence/governance/managed-identity.png
+### Managed Identity Integration
+Azure Managed Identity was used for secure storage access, eliminating credential sprawl and aligning with enterprise security best practices.
 
----
-
-### 4. Orchestration & Automation
-- Scheduled Databricks jobs
-- Workflow orchestration
-
-📂 Evidence:
-- evidence/workflows/job-orchestration-schedule.png
+### CI/CD Integration
+GitHub Actions was integrated to support version control and automated validation of workflow changes.
 
 ---
 
-### 5. Analytics & Consumption
-- SQL warehouse queries on curated datasets
+## Architectural Outcomes
 
-📂 Evidence:
-- evidence/sql/query-results.png
+The implemented platform demonstrates:
 
----
+- Scalable ingestion with schema evolution support
+- Declarative transformation pipelines using DLT
+- Governed access control via Unity Catalog
+- Reproducible ML experimentation with MLflow
+- Operationalised model serving endpoints
+- Automated workflow orchestration
+- CI/CD-enabled change management
 
-### 6. DevOps & CI/CD
-- GitHub Actions pipeline integration
-- Automated validation workflows
-
-📂 Evidence:
-- evidence/cicd/github-actions.png
-
-
-
+This architecture reflects production-oriented data platform design.
 ---
 
 ## 📚 Reference
