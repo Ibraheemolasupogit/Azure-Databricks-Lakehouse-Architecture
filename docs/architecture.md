@@ -15,6 +15,7 @@ Design and optimise a governed Lakehouse on Azure Databricks to support batch, s
 - **Consumption**: SQL Warehouses serving curated Gold datasets for BI / analytics
 - **DevOps**: GitHub integration with CI/CD workflow validation
 
+
 ### Structural Overview
 
 ```mermaid
@@ -70,6 +71,7 @@ flowchart LR
     C3 --- F1
     D2 --- F1
     E2 --- F1
+
 
 
 ## 3. Design Decisions
