@@ -13,7 +13,69 @@ The implementation covers:
 - MLflow experiment tracking and model lifecycle management
 - CI/CD integration via GitHub Actions
 
-The repository is structured to reflect architectural domains rather than lab exercises.
+The repository is structured to reflect architectural domains.
+
+
+---
+
+## Architecture Overview
+
+The platform follows a layered Lakehouse architecture:
+
+### 1. Ingestion Layer
+- Auto Loader streaming ingestion
+- Schema evolution handling
+- Delta write operations
+
+📂 Evidence:
+- evidence/lakehouse/autoloader-new-columns.png
+
+---
+
+### 2. Transformation & Lakehouse Modelling
+- Delta Live Tables (DLT)
+- Medallion architecture (Bronze → Silver → Gold)
+
+📂 Evidence:
+- evidence/lakehouse/delta-live-table-pipeline.png
+
+---
+
+### 3. Governance & Security
+- Unity Catalog schema management
+- Fine-grained table permissions
+- Managed Identity integration
+
+📂 Evidence:
+- evidence/governance/unity-catalog-lineage.png
+- evidence/governance/grant-permissions.png
+- evidence/governance/managed-identity.png
+
+---
+
+### 4. Orchestration & Automation
+- Scheduled Databricks jobs
+- Workflow orchestration
+
+📂 Evidence:
+- evidence/workflows/job-orchestration-schedule.png
+
+---
+
+### 5. Analytics & Consumption
+- SQL warehouse queries on curated datasets
+
+📂 Evidence:
+- evidence/sql/query-results.png
+
+---
+
+### 6. DevOps & CI/CD
+- GitHub Actions pipeline integration
+- Automated validation workflows
+
+📂 Evidence:
+- evidence/cicd/github-actions.png
 
 
 
