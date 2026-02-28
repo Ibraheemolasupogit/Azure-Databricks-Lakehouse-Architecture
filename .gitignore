@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+
+# Databricks
+.databricks/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Mac
+.AppleDouble
+.LSOverride
+
+# Build / Docs
+_site/
+_build/

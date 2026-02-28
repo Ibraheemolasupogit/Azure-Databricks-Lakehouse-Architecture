@@ -17,6 +17,7 @@ Design and optimise a governed Lakehouse on Azure Databricks to support batch, s
 
 
 ### Structural Overview
+The following diagram illustrates logical component boundaries and data flow across batch, streaming, ML, and LLM workloads under centralized governance.
 
 ```mermaid
 flowchart LR
