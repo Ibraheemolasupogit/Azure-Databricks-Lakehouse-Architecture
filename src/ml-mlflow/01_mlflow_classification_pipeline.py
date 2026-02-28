@@ -1,45 +1,63 @@
 # Databricks notebook source
 # COMMAND ----------
 # MAGIC %md
-# MAGIC # ML Classification with MLflow Tracking
+# MAGIC # MLflow Classification Pipeline
 # MAGIC
-# MAGIC **Purpose**
+# MAGIC This notebook:
+# MAGIC - Trains a simple classifier with Spark ML
+# MAGIC - Logs parameters, metrics, and the model with **MLflow**
+# MAGIC - Registers the model in the MLflow Model Registry
 # MAGIC
-# MAGIC This notebook demonstrates:
-# MAGIC
-# MAGIC - Training a classification model in Azure Databricks
-# MAGIC - Tracking experiments and metrics with **MLflow**
-# MAGIC - Registering the best model in the MLflow Model Registry
-# MAGIC
-# MAGIC **Key focus areas**
-# MAGIC
-# MAGIC - Reproducible ML experiments  
-# MAGIC - Metrics and parameter logging  
-# MAGIC - Model registration and versioning
+# MAGIC Inspired by the Microsoft Learn lab *"Use MLflow in Azure Databricks"*.
 
 # COMMAND ----------
+from pyspark.sql.functions import col
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.classification import LogisticRegression
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 import mlflow
-import mlflow.sklearn
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-from sklearn.ensemble import RandomForestClassifier
+import mlflow.spark
 
-# Load your data (replace with penguins / covid / etc.)
-data = spark.table("main.sales.products").toPandas()
+# Example: load penguin data Delta table if you've created it already
+data = spark.read.table("default.penguins")  # adjust to your table name
 
-X = data.drop("label_column", axis=1)  # replace
-y = data["label_column"]               # replace
+feature_cols = ["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"]
+label_col = "species_index"
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+assembler = VectorAssembler(inputCols=feature_cols, outputCol="features")
+data_assembled = assembler.transform(data).select("features", col(label_col).alias("label"))
 
-with mlflow.start_run(run_name="rf-classifier"):
-    model = RandomForestClassifier(n_estimators=100, random_state=42)
-    model.fit(X_train, y_train)
+train_df, test_df = data_assembled.randomSplit([0.8, 0.2], seed=42)
 
-    preds = model.predict(X_test)
-    acc = accuracy_score(y_test, preds)
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## Train & log with MLflow
 
-    mlflow.log_metric("accuracy", acc)
-    mlflow.sklearn.log_model(model, "model")
+# COMMAND ----------
+with mlflow.start_run(run_name="penguin_logreg"):
+    lr = LogisticRegression(maxIter=50, featuresCol="features", labelCol="label")
+    model = lr.fit(train_df)
 
-    print(f"Accuracy: {acc}")
+    predictions = model.transform(test_df)
+    evaluator = MulticlassClassificationEvaluator(metricName="accuracy")
+    accuracy = evaluator.evaluate(predictions)
+
+    mlflow.log_param("maxIter", 50)
+    mlflow.log_metric("accuracy", accuracy)
+    mlflow.spark.log_model(model, "model")
+
+    print(f"Test accuracy: {accuracy:.4f}")
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## Register best model in MLflow Model Registry
+
+# COMMAND ----------
+run_id = mlflow.active_run().info.run_id if mlflow.active_run() else None
+print("Last run id:", run_id)
+
+# In practice, you'd pick the best run from an experiment.
+if run_id:
+    model_uri = f"runs:/{run_id}/model"
+    registered_model = mlflow.register_model(model_uri, "penguin-classifier")
+    print("Registered model version:", registered_model.version)
