@@ -71,8 +71,7 @@ flowchart LR
     C3 --- F1
     D2 --- F1
     E2 --- F1
-
-
+```
 
 ## 3. Design Decisions
 
