@@ -1,20 +1,18 @@
 # Enterprise Lakehouse & ML Platform Architecture on Azure Databricks
 
-This repository demonstrates the design and implementation of a production-oriented Lakehouse and Machine Learning platform built on Azure Databricks.
+This repository implements a governed Azure Databricks Lakehouse and Machine Learning platform designed for enterprise workloads.
 
-The implementation covers:
-
-- Delta Lakehouse architecture (Bronze/Silver/Gold)
+It demonstrates:
+- Delta Lakehouse architecture (Bronze / Silver / Gold)
 - Auto Loader streaming ingestion with schema evolution
 - Delta Live Tables (DLT) pipeline orchestration
 - Unity Catalog governance and access controls
 - Job orchestration and scheduling
-- SQL analytics layer for consumption
+- SQL analytics for downstream consumption
 - MLflow experiment tracking and model lifecycle management
 - CI/CD integration via GitHub Actions
 
-The repository is structured to reflect architectural domains.
-
+The repository is structured around key architectural domains rather than individual labs.
 
 ---
 
