@@ -28,8 +28,7 @@ This project implements a governed Azure Databricks Lakehouse that supports batc
 - **Consumption** – SQL Warehouses serving curated Gold datasets for BI and analytics  
 - **DevOps** – GitHub integration with CI/CD validation via GitHub Actions  
 
-👉 For the full architecture write-up and design rationale, see  
-`docs/architecture.md`.
+👉 For the full architecture write-up and design rationale, see the [architecture overview](docs/architecture.md).
 
 
 ---
