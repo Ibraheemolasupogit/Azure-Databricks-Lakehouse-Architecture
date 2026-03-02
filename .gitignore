@@ -27,3 +27,6 @@ Thumbs.db
 # Build / Docs
 _site/
 _build/
+.DS_Store
+**/.DS_Store.DS_Store
+**/.DS_Store
